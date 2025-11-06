@@ -4,6 +4,24 @@
 
 **담당:** **JWT 기반 역할 권한 시스템** 설계 및 구현, **카카오 소셜 로그인** 연동, **관리자 및 사장님 전용 페이지** 개발, **핵심 콘텐츠 (구장/음식점, 리뷰 신고)** 페이지 구현
 
+### 🎬 프로젝트 시연 영상 (Demo Video)
+
+**최종 구현된 시스템의 동작을 확인하세요.**
+
+[![시연 영상 미리보기](https://img.youtube.com/vi/yQFHgwuHjG4/0.jpg)](https://www.youtube.com/watch?v=yQFHgwuHjG4)
+
+* **URL:** [전체 영상 보기](https://www.youtube.com/watch?v=yQFHgwuHjG4)
+
+---
+
+## 🔗 프로젝트 전체 히스토리 및 참고 자료
+
+팀 프로젝트의 기획, 회의록, 역할 분담 등 전체적인 맥락을 확인할 수 있는 문서입니다.
+
+* **팀 노션 공개 링크:** [프로젝트 전체 기록 (기획/회의록)](https://temporal-flight-602.notion.site/27877debdf8d80c48541cc32126d0a4e?v=27877debdf8d80c98022000c650699fb&source=copy_link)
+
+***
+
 ## **💻 핵심 기여 모듈 및 소스 코드 (Core Contribution Modules)**
 
 이 프로젝트에서 **엄정민 님이 주도적으로 설계 및 구현**한 핵심 기능별 모듈 목록입니다.
@@ -14,7 +32,7 @@
 | **역할 기반 관리** | AdminPage, OwnerPage | AdminController, OwnerService | TB\_STORE, TB\_MEMBER |
 | **리뷰/신고** | ReviewComponent, ReviewReportPage | ReviewService, ReportController | TB\_REVIEW, TB\_REPORT |
 | **핵심 콘텐츠** | StadiumPage, RestaurantModal, PlayerPickPage | StadiumService, RestaurantController | TB\_STADIUM, TB\_RESTAURANT, TB\_PLAYER\_PICK |
-| **외부 API 연동** | AddRestaurantPage | BizCheckService (NTS API 연동) | (N/A \- 인증만) |
+| **외부 API 연동** | AddRestaurantPage | BizCheckService (NTS API 연동) |  (인증만) |
 
 ### **🔍 주요 기여 역할 요약**
 
