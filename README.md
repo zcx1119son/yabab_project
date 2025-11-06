@@ -4,9 +4,7 @@
 
 **담당:** **JWT 기반 역할 권한 시스템** 설계 및 구현, **카카오 소셜 로그인** 연동, **관리자 및 사장님 전용 페이지** 개발, **핵심 콘텐츠 (구장/음식점, 리뷰 신고)** 페이지 구현
 
-### 🎬 프로젝트 시연 영상 (Demo Video)
-
-**최종 구현된 시스템의 동작을 확인하세요.**
+### 🎬 프로젝트 시연 영상 
 
 [![시연 영상 미리보기](https://img.youtube.com/vi/yQFHgwuHjG4/0.jpg)](https://www.youtube.com/watch?v=yQFHgwuHjG4)
 
@@ -28,11 +26,12 @@
 
 | 기능 분류 | 프론트엔드 (Frontend) | 백엔드 (Backend) | DB 테이블/Mapper |
 | :---- | :---- | :---- | :---- |
-| **인증/인가** | KakaoLoginComponent, MyPage | AuthService, JwtTokenProvider, SecurityConfig | TB\_MEMBER, TB\_AUTHORITY |
-| **역할 기반 관리** | AdminPage, OwnerPage | AdminController, OwnerService | TB\_STORE, TB\_MEMBER |
-| **리뷰/신고** | ReviewComponent, ReviewReportPage | ReviewService, ReportController | TB\_REVIEW, TB\_REPORT |
-| **핵심 콘텐츠** | StadiumPage, RestaurantModal, PlayerPickPage | StadiumService, RestaurantController | TB\_STADIUM, TB\_RESTAURANT, TB\_PLAYER\_PICK |
-| **외부 API 연동** | AddRestaurantPage | BizCheckService (NTS API 연동) |  (인증만) |
+| **인증/인가** | [auth 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/auth), [MyPage 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/mypage) | [KakaoAuth](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/KakaoAuth), [MyPage](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/MyPage) | TB\_MEMBER, TB\_AUTHORITY |
+| **역할 기반 관리** | [Admin 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/admin), [Owner 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/owner) | [Admin](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/Admin), [Owner](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/Owner) | TB\_STORE, TB\_MEMBER |
+| **핵심 콘텐츠** | [Stadium 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/stadium), [Pick 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/pick) | [Stadium](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/Stadium), [PlayerPick](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/PlayerRestaurantPick) | TB\_STADIUM, TB\_RESTAURANT, TB\_PLAYER\_PICK |
+| **예약 시스템** | [Restaurant 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/restaurant) | [Reserve](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/Reserve) | TB\_RESERVATION |
+| **리뷰/신고** | [Restaurant 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/restaurant) | [Review](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/RestaurantReview), [Report](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/ReviewReport) | TB\_REVIEW, TB\_REPORT |
+| **외부 API 연동** | [Owner 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/owner) | [AddRestaurant](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/AddRestaurant) |  (인증만) |
 
 ### **🔍 주요 기여 역할 요약**
 
