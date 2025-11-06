@@ -14,13 +14,13 @@
 | **역할 기반 관리** | AdminPage, OwnerPage | AdminController, OwnerService | TB\_STORE, TB\_MEMBER |
 | **리뷰/신고** | ReviewComponent, ReviewReportPage | ReviewService, ReportController | TB\_REVIEW, TB\_REPORT |
 | **핵심 콘텐츠** | StadiumPage, RestaurantModal, PlayerPickPage | StadiumService, RestaurantController | TB\_STADIUM, TB\_RESTAURANT, TB\_PLAYER\_PICK |
-| **외부 API 연동** | **AddRestaurantPage** | **BizCheckService** (NTS API 연동) | (N/A \- 인증만) |
+| **외부 API 연동** | AddRestaurantPage | BizCheckService (NTS API 연동) | (N/A \- 인증만) |
 
 ### **🔍 주요 기여 역할 요약**
 
 * **백엔드:** **JWT 기반의 Spring Security 인증/인가 파이프라인** 설계 및 Kakao OAuth 연동 구현.  
 * **프론트엔드:** \*\*역할(Role)\*\*에 따라 접근이 제어되는 **관리자/사장님 페이지**, 사용자 **마이 페이지**, **핵심 콘텐츠(구장/음식점/선수추천)** UI/로직 구현.  
-* **기술:** **국세청 $\\text{API}$를 활용한 사장님 실명 및 사업자 검증 로직**을 AddRestaurantPage에 연동하여 **인증**에만 활용.  
+* **기술:** **국세청 API**를 활용한 사장님 실명 및 사업자 검증 로직을 AddRestaurantPage에 연동하여 **인증**에만 활용.  
 * **데이터베이스:** TB\_MEMBER, TB\_STORE, TB\_STADIUM 등 핵심 데이터 모델링 참여.
 
 ## **1\. 🔐 JWT 기반 역할 인증 및 권한 관리 시스템**
@@ -56,7 +56,7 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 * **핵심 기능:**  
   * **정보 모달:** 음식점 선택 시 상세 정보 (메뉴, 가격) 모달 출력  
   * **리뷰 CRUD:** 사용자 별 리뷰 작성, 수정, 삭제 기능 구현  
-  * **필터링:** 선수 추천 맛집 목록에 대한 필터링 로직 구현
+  * **구단별 필터링:** PlayerPickPage에서 **구단별로** 선수들이 추천하는 맛집 목록을 조회하고 필터링하는 로직 구현
 
 ### **2.2. 🚨 리뷰 신고 시스템 (Report System)**
 
@@ -68,37 +68,29 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 
 ## **3\. 🛠️ 시스템 아키텍처 및 기술 스택 (Architecture & Tech Stack)**
 
-### **3.1. 🗺️ 인증 흐름도 (Mermaid)**
+### **3.1. 🗺️ 인증 흐름 요약 (Text Summary)**
 
-카카오를 통한 소셜 로그인 요청부터 JWT 발급 및 인가 제어까지의 핵심 흐름입니다.
+Mermaid 다이어그램이 지원되지 않는 환경을 고려하여, 카카오 소셜 로그인 요청부터 JWT 발급 및 인가 제어까지의 핵심 흐름을 텍스트로 요약했습니다.
 
-```
-  flowchart TD  
-    A\[Frontend: 로그인 요청\] \--\> B(Kakao Authorization Server);  
-    B \--\> C{인가 코드 발급};  
-    C \--\> D\[Frontend: 인가 코드 전달\];  
-    D \--\> E(Spring Backend: /auth/kakao);  
-    E \--\> F(Kakao Resource Server);  
-    F \--\> G{사용자 정보 획득};  
-    G \--\> H\["Spring Backend: JWT 생성 및 발급\<br/\>(Access, Refresh)"\];  
-    H \--\> I\[Frontend: JWT 저장\];  
-    I \--\> J\["Frontend: API 요청 시 Header에 JWT 첨부"\];  
-    J \--\> K{Spring Security Filter: JWT 유효성 및 권한 검증};  
-    K \--\> L(비즈니스 로직 실행);  
-``` 
+1. **프론트엔드 (로그인 요청)** $\\rightarrow$ Kakao Authorization Server  
+2. **인가 코드 발급** $\\rightarrow$ 프론트엔드로 전달  
+3. **프론트엔드 (인가 코드 전달)** $\\rightarrow$ Spring Backend (/auth/kakao)  
+4. **Spring Backend** $\\rightarrow$ Kakao Resource Server에서 사용자 정보 획득  
+5. **Spring Backend:** 사용자 정보 기반으로 **JWT (Access, Refresh Token)** 생성 및 발급  
+6. **프론트엔드:** JWT 저장 후, API 요청 시 Header에 JWT 첨부  
+7. **Spring Security Filter:** 요청 시마다 JWT 유효성 및 권한 검증 $\\rightarrow$ 비즈니스 로직 실행
 
-\-----
+## **4\. 🛑 트러블 슈팅 (Troubleshooting & Lessons Learned)**
 
-\#\# 4\. 🛑 트러블 슈팅 (Troubleshooting & Lessons Learned)
+### **1\. 📋 국세청 API를 활용한 복합 사업자 정보 검증**
 
-\#\#\# 1\. 📋 국세청 $\\text{API}$를 활용한 복합 사업자 정보 검증
+| 문제 상황 | 해결 방안 및 기술적 판단 |
+| :---- | :---- |
+| **상호명 일치 문제:** 사장님 권한 (ROLE\_OWNER) 부여를 위해 국세청 API를 연동했으나, API가 상호명에 대한 **부분 일치**만 허용하여 정확한 식당 상호명과 사업자번호의 일치 여부를 검증하기 어려웠습니다. | **다중 항목 검증 로직 구현:** 사업자번호, 개업일, 대표자명, **상호명**을 모두 전송하는 /validate 엔드포인트를 활용하는 **validateFullBusinessInfo 메서드를 구현**하여 검증 수준을 높였습니다. 최종적으로는 API의 기술적 한계를 보완하기 위해 **사업자등록증 수동 확인 플로우**를 추가했습니다. |
 
-| 문제 상황 | 해결 방안 및 기술적 판단 |  
-| :--- | :--- |  
-| \*\*상호명 일치 문제:\*\* 사장님 권한 (\`ROLE\_OWNER\`) 부여를 위해 국세청 $\\text{API}$를 연동했으나, $\\text{API}$가 상호명에 대한 \*\*부분 일치\*\*만 허용하여 정확한 식당 상호명과 사업자번호의 일치 여부를 검증하기 어려웠습니다. | \*\*다중 항목 검증 로직 구현:\*\* 사업자번호, 개업일, 대표자명, \*\*상호명\*\*을 모두 전송하는 \`/validate\` 엔드포인트를 활용하는 \*\*\`validateFullBusinessInfo\` 메서드를 구현\*\*하여 검증 수준을 높였습니다. 최종적으로는 $\\text{API}$의 기술적 한계를 보완하기 위해 \*\*사업자등록증 수동 확인 플로우\*\*를 추가했습니다. |
+### **2\. ⚡️ API 사용량 제한 및 속도 문제 (무료/유료 플랜)**
 
-\#\#\# 2\. ⚡️ $\\text{API}$ 사용량 제한 및 속도 문제 (무료/유료 플랜)
+| 문제 상황 | 해결 방안 및 기술적 판단 |
+| :---- | :---- |
+| **무료 플랜 한계:** 사용한 국세청 API의 무료 플랜이 **일일 요청 횟수 또는 속도에 제한**이 있어, 초기 테스트 및 사용자 증가 시 **인증 실패**나 **응답 지연**이 발생할 위험이 있었습니다. | **인증 캐싱 및 비동기 처리 설계:** **인증 성공 결과**를 일정 기간 Redis나 캐시 시스템에 저장하여 불필요한 API 호출을 줄이는 **캐싱 로직을 도입**하고, 사용자 경험을 개선하기 위해 API 호출 로직을 **비동기적으로 처리**하도록 설계하여, 유료 플랜 전환 전까지 서비스 안정성을 확보했습니다. |
 
-| 문제 상황 | 해결 방안 및 기술적 판단 |  
-| :--- | :--- |  
-| \*\*무료 플랜 한계:\*\* 사용한 국세청 $\\text{API}$의 무료 플랜이 \*\*일일 요청 횟수 또는 속도에 제한\*\*이 있어, 초기 테스트 및 사용자 증가 시 \*\*인증 실패\*\*나 \*\*응답 지연\*\*이 발생할 위험이 있었습니다. | \*\*인증 캐싱 및 비동기 처리 설계:\*\* \*\*인증 성공 결과\*\*를 일정 기간 \`Redis\`나 캐시 시스템에 저장하여 불필요한 $\\text{API}$ 호출을 줄이는 \*\*캐싱 로직을 도입\*\*하고, 사용자 경험을 개선하기 위해 $\\text{API}$ 호출 로직을 \*\*비동기적으로 처리\*\*하도록 설계하여, 유료 플랜 전환 전까지 서비스 안정성을 확보했습니다. |  
