@@ -72,7 +72,8 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 
 카카오를 통한 소셜 로그인 요청부터 JWT 발급 및 인가 제어까지의 핵심 흐름입니다.
 
-flowchart TD  
+```
+  flowchart TD  
     A\[Frontend: 로그인 요청\] \--\> B(Kakao Authorization Server);  
     B \--\> C{인가 코드 발급};  
     C \--\> D\[Frontend: 인가 코드 전달\];  
@@ -84,7 +85,7 @@ flowchart TD
     I \--\> J\["Frontend: API 요청 시 Header에 JWT 첨부"\];  
     J \--\> K{Spring Security Filter: JWT 유효성 및 권한 검증};  
     K \--\> L(비즈니스 로직 실행);  
-\`\`\`    
+``` 
 
 \-----
 
