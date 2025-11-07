@@ -20,7 +20,7 @@
 
 
 
-## 핵심 기여 모듈 및 소스 코드 (Core Contribution Modules)
+## 💻 핵심 기여 모듈 및 소스 코드 (Core Contribution Modules)
 
 이 프로젝트에서 **엄정민 님이 주도적으로 설계 및 구현**한 핵심 기능별 모듈 목록입니다.
 
@@ -33,18 +33,18 @@
 | **리뷰/신고** | [Restaurant 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/restaurant) | [Review](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/RestaurantReview), [Report](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/ReviewReport) | `TB_REVIEW`, `TB_REPORT` |
 | **외부 API 연동** | [Owner 폴더](https://github.com/zcx1119son/yabab_project/tree/master/frontend/src/components/owner) | [AddRestaurant](https://github.com/zcx1119son/yabab_project/tree/master/backend/src/main/java/fs/human/yabab/AddRestaurant) | (인증만) |
 
-### 주요 기여 역할 요약
+### 🔍 주요 기여 역할 요약
 
 * **백엔드:** **JWT 기반의 Spring Security 인증/인가 파이프라인** 설계 및 **Kakao OAuth** 연동 구현.  
 * **프론트엔드:** <strong>역할(Role)</strong>에 따라 접근이 제어되는 **관리자/사장님 페이지**, 사용자 **마이 페이지**, **핵심 콘텐츠(구장/음식점/선수추천)** UI/로직 구현.  
 * **기술:** **국세청 API**를 활용한 사장님 실명 및 사업자 검증 로직을 `AddRestaurantPage`에 연동하여 **인증**에만 활용.  
 * **데이터베이스:** `TB_MEMBER`, `TB_STORE`, `TB_STADIUM` 등 핵심 데이터 모델링 참여.
 
-## **1. JWT 기반 역할 인증 및 권한 관리 시스템**
+## **1. 🔐 JWT 기반 역할 인증 및 권한 관리 시스템**
 
 Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권한별 접근 제어를 구현하고, 사용자 편의성을 위해 카카오 소셜 로그인을 통합했습니다.
 
-### 인증 방식 및 구현 로직
+### 🌟 인증 방식 및 구현 로직
 
 사용자의 로그인 플로우를 <strong>OAuth 2.0(Kakao)</strong>와 **JWT**로 분리하여 설계 및 구현했습니다.
 
@@ -55,7 +55,7 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 | **인가 제어** | Spring Security의 FilterChain을 통해 요청 시마다 **JWT를 검증**하고, <strong>사용자 권한(ROLE)</strong>에 따라 **특정 URL 접근을 제어** |
 | **역할 분리** | `ROLE_USER`, `ROLE_OWNER`, `ROLE_ADMIN` 3단계 권한 부여 로직 구현 |
 
-### 역할별 주요 페이지 및 기능 구현
+### 📈 역할별 주요 페이지 및 기능 구현
 
 | 역할 (Role) | 주요 담당 페이지 | 핵심 기능 |
 | :---- | :---- | :---- |
@@ -63,11 +63,11 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 | **ROLE_OWNER** | 사장님 페이지 (Owner Page) | 메뉴 및 음식점 정보 등록/수정, 리뷰 관리 |
 | **ROLE_ADMIN** | 관리자 페이지 (Admin Page) | 회원 영구 삭제, 신고 리뷰 조회 및 삭제 처리 |
 
-## **2. 핵심 콘텐츠 및 관리 시스템**
+## **2. 🏟️ 핵심 콘텐츠 및 관리 시스템**
 
 야구장별 먹거리 정보의 조회 및 사용자 피드백(리뷰, 신고) 관리 기능을 구현했습니다.
 
-### **2.1. 구장/음식점 정보 조회 및 리뷰 CRUD**
+### **2.1. 📑 구장/음식점 정보 조회 및 리뷰 CRUD**
 
 * **구현 페이지:** 구장 및 음식점 상세 정보 페이지 (`/stadium/:id`, `/restaurant/:id`)  
 * **핵심 기능:**  
@@ -75,7 +75,7 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
   * **리뷰 CRUD:** 사용자 별 리뷰 작성, 수정, 삭제 기능 구현  
   * **구단별 필터링:** `PlayerPickPage`에서 **구단별로** 선수들이 추천하는 맛집 목록을 조회하고 필터링하는 로직 구현
 
-### **2.2. 리뷰 신고 시스템 (Report System)**
+### **2.2. 🚨 리뷰 신고 시스템 (Report System)**
 
 | 기능 분류 | 상세 내용 |
 | :---- | :---- |
@@ -83,9 +83,9 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 | **DB 저장** | `TB_REPORT` 테이블에 신고자 ID, 리뷰 ID, 신고 사유 저장 |
 | **관리자 페이지 연동** | 관리자는 신고 내역을 조회하고, 해당 리뷰를 확인 후 삭제할 수 있는 관리 기능 구현 |
 
-## **3. 시스템 아키텍처 및 기술 스택 (Architecture & Tech Stack)**
+## **3. 🛠️ 시스템 아키텍처 및 기술 스택 (Architecture & Tech Stack)**
 
-### **3.1. 인증 흐름 요약 (Text Summary)**
+### **3.1. 🗺️ 인증 흐름 요약 (Text Summary)**
 
 카카오 소셜 로그인 요청부터 JWT 발급 및 인가 제어까지의 핵심 흐름입니다.
 
