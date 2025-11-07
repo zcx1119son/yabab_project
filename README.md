@@ -46,13 +46,13 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 
 ### 인증 방식 및 구현 로직
 
-사용자의 로그인 플로우를 **OAuth 2.0(Kakao)**와 **JWT**로 분리하여 설계 및 구현했습니다.
+사용자의 로그인 플로우를 <strong>OAuth 2.0(Kakao)</strong>와 **JWT**로 분리하여 설계 및 구현했습니다.
 
 | 분류 | 상세 구현 내용 |
 | :---- | :---- |
 | **소셜 로그인** | **Kakao API**를 이용한 인가 코드 발급 및 사용자 정보 획득 |
 | **인증 처리** | 획득한 사용자 정보를 기반으로 서버에서 **JWT (Access/Refresh Token)** 발급 |
-| **인가 제어** | Spring Security의 FilterChain을 통해 요청 시마다 **JWT를 검증**하고, **사용자 권한(ROLE)**에 따라 **특정 URL 접근을 제어** |
+| **인가 제어** | Spring Security의 FilterChain을 통해 요청 시마다 **JWT를 검증**하고, <strong>사용자 권한(ROLE)</strong>에 따라 **특정 URL 접근을 제어** |
 | **역할 분리** | `ROLE_USER`, `ROLE_OWNER`, `ROLE_ADMIN` 3단계 권한 부여 로직 구현 |
 
 ### 역할별 주요 페이지 및 기능 구현
