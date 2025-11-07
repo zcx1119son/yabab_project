@@ -36,7 +36,7 @@
 ### **🔍 주요 기여 역할 요약**
 
 * **백엔드:** **JWT 기반의 Spring Security 인증/인가 파이프라인** 설계 및 Kakao OAuth 연동 구현.  
-* **프론트엔드:** \*\*역할(Role)\*\*에 따라 접근이 제어되는 **관리자/사장님 페이지**, 사용자 **마이 페이지**, **핵심 콘텐츠(구장/음식점/선수추천)** UI/로직 구현.  
+* **프론트엔드:** **역할(Role)**에 따라 접근이 제어되는 **관리자/사장님 페이지**, 사용자 **마이 페이지**, **핵심 콘텐츠(구장/음식점/선수추천)** UI/로직 구현.  
 * **기술:** **국세청 API**를 활용한 사장님 실명 및 사업자 검증 로직을 AddRestaurantPage에 연동하여 **인증**에만 활용.  
 * **데이터베이스:** TB\_MEMBER, TB\_STORE, TB\_STADIUM 등 핵심 데이터 모델링 참여.
 
@@ -87,9 +87,9 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 
 ### **3.1. 🗺️ 인증 흐름 요약 (Text Summary)**
 
-카카오 소셜 로그인 요청부터 JWT 발급 및 인가 제어까지의 핵심 흐름을 텍스트로 요약했습니다.
+카카오 소셜 로그인 요청부터 JWT 발급 및 인가 제어까지의 핵심 흐름입니다.
 
-```
+```mermaid
   sequenceDiagram
       participant F as Frontend (React)
       participant K as Kakao Auth Server
