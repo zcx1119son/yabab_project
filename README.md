@@ -46,13 +46,13 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 
 ### **🌟 인증 방식 및 구현 로직**
 
-사용자의 로그인 플로우를 \*\*OAuth 2.0 (Kakao)\*\*와 **JWT**로 분리하여 설계 및 구현했습니다.
+사용자의 로그인 플로우를 **OAuth 2.0 (Kakao)**와 **JWT**로 분리하여 설계 및 구현했습니다.
 
 | 분류 | 상세 구현 내용 |
 | :---- | :---- |
 | **소셜 로그인** | **Kakao API**를 이용한 인가 코드 발급 및 사용자 정보 획득 |
 | **인증 처리** | 획득한 사용자 정보를 기반으로 서버에서 **JWT (Access/Refresh Token)** 발급 |
-| **인가 제어** | Spring Security의 FilterChain을 통해 요청 시마다 **JWT를 검증**하고, 사용자 권한(ROLE\_\*)에 따라 **특정 URL 접근을 제어** |
+| **인가 제어** | Spring Security의 FilterChain을 통해 요청 시마다 **JWT를 검증**하고, **사용자 권한(ROLE)**에 따라 **특정 URL 접근을 제어** |
 | **역할 분리** | ROLE\_USER, ROLE\_OWNER, ROLE\_ADMIN 3단계 권한 부여 로직 구현 |
 
 ### **📈 역할별 주요 페이지 및 기능 구현**
@@ -87,15 +87,37 @@ Spring Security와 JWT(JSON Web Token)를 사용하여 사용자 인증 및 권�
 
 ### **3.1. 🗺️ 인증 흐름 요약 (Text Summary)**
 
-Mermaid 다이어그램이 지원되지 않는 환경을 고려하여, 카카오 소셜 로그인 요청부터 JWT 발급 및 인가 제어까지의 핵심 흐름을 텍스트로 요약했습니다.
+카카오 소셜 로그인 요청부터 JWT 발급 및 인가 제어까지의 핵심 흐름을 텍스트로 요약했습니다.
 
-1. **프론트엔드 (로그인 요청)** $\\rightarrow$ Kakao Authorization Server  
-2. **인가 코드 발급** $\\rightarrow$ 프론트엔드로 전달  
-3. **프론트엔드 (인가 코드 전달)** $\\rightarrow$ Spring Backend (/auth/kakao)  
-4. **Spring Backend** $\\rightarrow$ Kakao Resource Server에서 사용자 정보 획득  
-5. **Spring Backend:** 사용자 정보 기반으로 **JWT (Access, Refresh Token)** 생성 및 발급  
-6. **프론트엔드:** JWT 저장 후, API 요청 시 Header에 JWT 첨부  
-7. **Spring Security Filter:** 요청 시마다 JWT 유효성 및 권한 검증 $\\rightarrow$ 비즈니스 로직 실행
+```
+  sequenceDiagram
+      participant F as Frontend (React)
+      participant K as Kakao Auth Server
+      participant B as Backend (Spring)
+      participant S as Spring Security Filter
+
+      title Kakao Social Login & JWT Flow
+
+      F->>K: 1. 인가 코드 요청 (Redirect)
+      K-->>F: 2. 인가 코드 발급
+      F->>B: 3. 인가 코드 전달 (/auth/kakao)
+      B->>K: 4. Access Token 요청 (with Code)
+      K-->>B: 5. Access Token 및 사용자 정보 전달
+      B->>B: 6. JWT 생성 (Access & Refresh Token)
+      B-->>F: 7. JWT (응답 헤더/바디) 반환
+      F->>F: 8. JWT 저장 (Local/Cookie)
+    
+      loop API 요청 시
+          F->>B: 9. JWT 첨부 (Authorization Header)
+          B->>S: 10. JWT 유효성 및 권한 검증
+          alt 유효성 검증 성공
+              S-->>B: 11. 인증 객체 (Authentication) 전달
+              B->>B: 12. 비즈니스 로직 실행
+          else 유효성 검증 실패
+              S-->>F: 11. 401 Unauthorized 반환
+          end
+      end
+```
 
 ## **4\. 🛑 트러블 슈팅 (Troubleshooting & Lessons Learned)**
 
@@ -103,4 +125,4 @@ Mermaid 다이어그램이 지원되지 않는 환경을 고려하여, 카카오
 
 | 문제 상황 | 해결 방안 및 기술적 판단 |
 | :---- | :---- |
-| **상호명 일치 문제:** 사장님 권한 (ROLE\_OWNER) 부여를 위해 국세청 API를 연동했으나, API가 상호명에 대한 **부분 일치**만 허용하여 정확한 식당 상호명과 사업자번호의 일치 여부를 검증하기 어려웠습니다. | **다중 항목 검증 로직 구현:** 사업자번호, 개업일, 대표자명, **상호명**을 모두 전송하는 /validate 엔드포인트를 활용하는 **validateFullBusinessInfo 메서드를 구현**하여 검증 수준을 높였습니다. 최종적으로는 API의 기술적 한계를 보완하기 위해 **사업자등록증 수동 확인 플로우**를 추가했습니다. |
+| **상호명 일치 문제:** 사장님 권한 (ROLE\_OWNER) 부여를 위해 국세청 API를 연동했으나, API가 상호명에 대한 **부분 일치**만 허용하여 정확한 식당 상호명과 사업자번호의 일치 여부를 검증하기 어려웠습니다. | **다중 항목 검증 로직 구현:** 사업자번호, 개업일, 대표자명, **상호명**을 모두 전송하는 /validate 엔드포인트를 활용하는 **validateFullBusinessInfo 메서드를 구현**하여 검증 수준을 높였습니다. 최종적으로는 API의 기술적 한계를 보완하기 위해 **사업자등록증 수동 확인 플로우**를 추가했습니다. |z
