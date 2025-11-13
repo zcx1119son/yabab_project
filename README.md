@@ -16,9 +16,9 @@
 
 팀 프로젝트의 기획, 회의록, 역할 분담 등 전체적인 맥락을 확인할 수 있는 문서입니다.
 
-* **팀 노션 공개 링크:** [프로젝트 전체 기록 (기획/회의록)]([https://temporal-flight-602.notion.site/27877debdf8d80c48541cc32126d0a4e?v=27877debdf8d80c98022000c650699fb&source=copy_link](https://www.notion.so/YABAB-Core-Contribution-2a7de68d8c8b80bdb9abf4e1e273ce39?source=copy_link)
+* **팀 노션 공개 링크:** [프로젝트 전체 기록 (기획/회의록)](https://www.notion.so/YABAB-Core-Contribution-2a7de68d8c8b80bdb9abf4e1e273ce39?source=copy_link)
 
-
+---
 
 ## 💻 핵심 기여 모듈 및 소스 코드 (Core Contribution Modules)
 
